@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ action }} Bug</h2>
+<form method="post">
+  <label>Title<input name="title" value="{{ bug.title if bug else '' }}" required></label><br>
+  <label>Description<br>
+    <textarea name="description">{{ bug.description if bug else '' }}</textarea>
+  </label><br>
+  <label>Severity
+    <select name="severity">
+      <option {% if bug and bug.severity=='Low' %}selected{% endif %}>Low</option>
+      <option {% if not bug or bug.severity=='Medium' %}selected{% endif %}>Medium</option>
+      <option {% if bug and bug.severity=='High' %}selected{% endif %}>High</option>
+      <option {% if bug and bug.severity=='Critical' %}selected{% endif %}>Critical</option>
+    </select>
+  </label><br>
+  {% if action == 'Edit' %}
+    <label>Status
+      <select name="status">
+        <option {% if bug.status=='Open' %}selected{% endif %}>Open</option>
+        <option {% if bug.status=='In Progress' %}selected{% endif %}>In Progress</option>
+        <option {% if bug.status=='Resolved' %}selected{% endif %}>Resolved</option>
+        <option {% if bug.status=='Closed' %}selected{% endif %}>Closed</option>
+      </select>
+    </label><br>
+    <label>Assignee
+      <select name="assignee">
+        <option>None</option>
+        {% for u in users %}
+          <option value="{{ u.id }}" {% if bug.assignee_id==u.id %}selected{% endif %}>{{ u.username }} ({{ u.role }})</option>
+        {% endfor %}
+      </select>
+    </label><br>
+  {% endif %}
+  <button type="submit">{{ action }}</button>
+</form>
+{% endblock %}

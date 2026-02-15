@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Dashboard</h2>
+<ul>
+  <li>Total Bugs: {{ total }}</li>
+  <li>Open: {{ open_count }}</li>
+  <li>Assigned to me: {{ assigned_to_me }}</li>
+</ul>
+
+<h3>Recent</h3>
+<ul>
+  {% for b in recent %}
+    <li><a href="{{ url_for('bug_detail', bug_id=b.id) }}">{{ b.title }}</a> - {{ b.status }}</li>
+  {% else %}
+    <li>No bugs yet</li>
+  {% endfor %}
+</ul>
+{% endblock %}

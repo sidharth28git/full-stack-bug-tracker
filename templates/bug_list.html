@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>All Bugs</h2>
+
+<form method="get" style="margin-bottom:10px;">
+  <label>Status
+    <select name="status">
+      <option value="">All</option>
+      <option value="Open">Open</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Resolved">Resolved</option>
+      <option value="Closed">Closed</option>
+    </select>
+  </label>
+  <label>Severity
+    <select name="severity">
+      <option value="">All</option>
+      <option>Low</option><option>Medium</option><option>High</option><option>Critical</option>
+    </select>
+  </label>
+  <label><input type="checkbox" name="mine" value="1"> Assigned to me</label>
+  <button>Filter</button>
+</form>
+
+<table>
+  <tr><th>ID</th><th>Title</th><th>Status</th><th>Severity</th><th>Assignee</th><th>Updated</th></tr>
+  {% for b in bugs %}
+    <tr>
+      <td>{{ b.id }}</td>
+      <td><a href="{{ url_for('bug_detail', bug_id=b.id) }}">{{ b.title }}</a></td>
+      <td>{{ b.status }}</td>
+      <td>{{ b.severity }}</td>
+      <td>{{ b.assignee.username if b.assignee else '-' }}</td>
+      <td>{{ b.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6">No bugs</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

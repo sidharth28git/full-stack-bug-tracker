@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>#{{ bug.id }} - {{ bug.title }}</h2>
+<p><strong>Status:</strong> {{ bug.status }} | <strong>Severity:</strong> {{ bug.severity }}</p>
+<p><strong>Reporter:</strong> {{ bug.reporter.username if bug.reporter else 'Unknown' }}
+   | <strong>Assignee:</strong> {{ bug.assignee.username if bug.assignee else '-' }}</p>
+<p>{{ bug.description or '(no description)' }}</p>
+
+<p>Created: {{ bug.created_at.strftime('%Y-%m-%d %H:%M') }}
+   | Updated: {{ bug.updated_at.strftime('%Y-%m-%d %H:%M') }}</p>
+
+<a href="{{ url_for('bug_edit', bug_id=bug.id) }}">Edit</a>
+
+<form method="post" action="{{ url_for('change_status', bug_id=bug.id) }}" style="display:inline;">
+  <label>Change Status
+    <select name="status">
+      <option>Open</option><option>In Progress</option><option>Resolved</option><option>Closed</option>
+    </select>
+  </label>
+  <button type="submit">Change</button>
+</form>
+
+{% if current_user.role == 'admin' %}
+  <form method="post" action="{{ url_for('bug_delete', bug_id=bug.id) }}" style="display:inline;">
+    <button type="submit" onclick="return confirm('Delete bug?')">Delete</button>
+  </form>
+{% endif %}
+{% endblock %}
